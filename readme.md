@@ -1,6 +1,5 @@
-# CardioSense AI
+# AI BASED HEART RISK ASSESMENT
 
-CardioSense AI is a Flask multi-page web application for cardiovascular risk screening.
 
 It provides:
 - Server-side routed pages for Home, Assessment Wizard, and Results Dashboard
