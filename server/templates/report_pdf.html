@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #15283f;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .sheet {
+            border: 1px solid #c8d8e8;
+            padding: 16px;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2px solid #2f6a9b;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .header-table td {
+            vertical-align: top;
+            padding: 0;
+        }
+
+        .logo-box {
+            width: 34px;
+            height: 34px;
+            border-radius: 7px;
+            text-align: center;
+            line-height: 34px;
+            background: #1f4f79;
+            color: #f5f9fd;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .header-title-wrap {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0f2b49;
+            margin: 0;
+        }
+
+        .subtitle {
+            color: #365572;
+            margin: 1px 0 0;
+        }
+
+        .meta {
+            margin-top: 2px;
+            color: #55708b;
+        }
+
+        .assessment-id {
+            text-align: right;
+            font-weight: bold;
+            color: #17395b;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .kpi-grid {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .kpi-grid td {
+            border: 1px solid #d8e4ef;
+            padding: 8px;
+            vertical-align: top;
+            width: 33.33%;
+        }
+
+        .kpi-label {
+            color: #5a7087;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .kpi-value {
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 3px;
+            color: #17395b;
+        }
+
+        .chart-grid {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .chart-grid td {
+            width: 50%;
+            vertical-align: top;
+            padding: 0;
+        }
+
+        .chart-grid td:first-child {
+            padding-right: 6px;
+        }
+
+        .chart-grid td:last-child {
+            padding-left: 6px;
+        }
+
+        .section {
+            margin-top: 10px;
+            border: 1px solid #d8e4ef;
+            padding: 10px;
+        }
+
+        .section h2 {
+            margin: 0 0 8px;
+            font-size: 13px;
+            color: #143150;
+        }
+
+        .gauge-track {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        .gauge-track td {
+            height: 12px;
+            padding: 0;
+            border: 0;
+        }
+
+        .gauge-fill {
+            background: #2f6a9b;
+        }
+
+        .gauge-rest {
+            background: #dde8f3;
+        }
+
+        .gauge-meta {
+            margin-top: 6px;
+            font-weight: bold;
+            color: #1b3f61;
+        }
+
+        .drivers {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .drivers td {
+            border-bottom: 1px solid #e1eaf2;
+            padding: 6px 4px;
+            vertical-align: middle;
+        }
+
+        .bar-track {
+            background: #ecf3f9;
+            height: 10px;
+            border-radius: 4px;
+        }
+
+        .bar-fill {
+            background: #2f6a9b;
+            height: 10px;
+            border-radius: 4px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .small {
+            color: #506980;
+            font-size: 10px;
+            margin-top: 8px;
+        }
+
+        .disclaimer {
+            margin-top: 10px;
+            border-top: 1px solid #dce7f1;
+            padding-top: 6px;
+            color: #4a6278;
+            font-size: 9px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="sheet">
+    <table class="header-table">
+        <tr>
+            <td>
+                <span class="logo-box">MS</span>
+                <span class="header-title-wrap">
+                    <p class="title">Medical Summary Report</p>
+                    <p class="subtitle">Pathology-Style Preventive Cardiac Screening Snapshot</p>
+                    <p class="meta">Generated: {{ report.generated_on }}</p>
+                </span>
+            </td>
+            <td>
+                <p class="assessment-id">Assessment ID: {{ report.assessment_id }}</p>
+            </td>
+        </tr>
+    </table>
+
+    <table class="kpi-grid">
+        <tr>
+            <td>
+                <div class="kpi-label">Risk Level</div>
+                <div class="kpi-value">{{ report.prediction.risk }}</div>
+            </td>
+            <td>
+                <div class="kpi-label">Risk Score</div>
+                <div class="kpi-value">{{ (report.prediction.risk_probability * 100)|round(1) }}%</div>
+            </td>
+            <td>
+                <div class="kpi-label">Heart Age</div>
+                <div class="kpi-value">{{ report.prediction.heart_age }} years</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="chart-grid">
+        <tr>
+            <td>
+                <div class="section">
+                    <h2>Risk Gauge</h2>
+                    <table class="gauge-track">
+                        <tr>
+                            <td class="gauge-fill" style="width: {{ report.gauge_fill_percent | float | round(0) }}%;"></td>
+                            <td class="gauge-rest" style="width: {{ report.gauge_rest_percent | float | round(0) }}%;"></td>
+                        </tr>
+                    </table>
+                    <p class="gauge-meta">Gauge Value: {{ report.risk_percent }}%</p>
+                    <p class="small">Gauge reflects calibrated probability for preventive triage.</p>
+                </div>
+            </td>
+            <td>
+                <div class="section">
+                    <h2>Risk Driver Bar Chart</h2>
+                    <table class="drivers">
+                        {% for driver in report.drivers %}
+                        <tr>
+                            <td style="width: 34%;"><strong>{{ driver.label }}</strong></td>
+                            <td style="width: 51%;">
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: {{ driver.impact_percent | float | round(0) }}%;"></div>
+                                </div>
+                            </td>
+                            <td style="width: 15%; text-align: right;">{{ driver.impact_percent }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section">
+        <h2>Clinical Interpretation</h2>
+        <p>{{ report.prediction.risk_summary }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Personalized Preventive Recommendations</h2>
+        <ul>
+            {% for tip in report.recommendations[:6] %}
+            <li>{{ tip }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Assessment Inputs</h2>
+        <p>
+            Age: {{ report.payload.age }} years, Sex: {{ report.payload.sex|title }},
+            Blood Pressure: {{ report.payload.blood_pressure }} mmHg,
+            Cholesterol: {{ report.payload.cholesterol }} mg/dL,
+            Smoking: {{ report.payload.smoking|title }},
+            Diabetes: {{ 'Yes' if report.payload.diabetes else 'No' }}
+        </p>
+    </div>
+
+    <p class="small">
+        Clinical note: This report is a screening summary and is not a substitute for formal clinical diagnosis.
+    </p>
+    <p class="disclaimer">
+        This is a computational screening tool. It does not replace clinical diagnosis by a licensed cardiologist.
+    </p>
+</div>
+</body>
+</html>

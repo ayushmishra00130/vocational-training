@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Clinical Dashboard{% endblock %}
+{% block page_id %}results{% endblock %}
+
+{% block head_extras %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <p class="eyebrow">Clinical Command Center</p>
+    <h1>Your Risk Intelligence</h1>
+    <p id="results-subtitle">Interactive risk analysis, explainability, simulation, and printable medical summary.</p>
+</section>
+
+<p id="results-empty" class="error hidden">
+    No assessment found for this session. Please complete the questionnaire first.
+    <a href="{{ url_for('assess') }}">Go to Assessment</a>.
+</p>
+
+<section id="results-dashboard" class="results-grid hidden">
+    <article class="card glass risk-overview-card">
+        <div class="risk-head">
+            <h2>Risk Outlook</h2>
+            <span id="risk-badge" class="badge">-</span>
+        </div>
+        <div class="gauge-wrap">
+            <canvas id="risk-gauge-chart" aria-label="Risk gauge chart" role="img"></canvas>
+        </div>
+        <div class="metric-row">
+            <div class="metric-pill">
+                <span class="metric-label">Risk Score</span>
+                <strong id="risk-probability">-</strong>
+            </div>
+            <div class="metric-pill">
+                <span class="metric-label">Heart Age</span>
+                <strong id="heart-age">-</strong>
+            </div>
+        </div>
+        <p id="heart-age-breakdown" class="subtle-text"></p>
+    </article>
+
+    <article class="card glass drivers-card">
+        <div class="panel-head">
+            <h2>Primary Drivers</h2>
+            <p>Top factors shaping your current risk score.</p>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="drivers-chart" aria-label="Primary driver chart" role="img"></canvas>
+        </div>
+        <ul id="driver-status-list" class="driver-status-list"></ul>
+        <p id="risk-summary" class="xai-summary"></p>
+    </article>
+
+    <article class="card glass simulation-card">
+        <div class="panel-head">
+            <h2>What-If Bio-Simulation</h2>
+            <p>Adjust modifiable factors and watch your risk update in real time.</p>
+        </div>
+
+        <div class="slider-group">
+            <label for="sim-bp">Blood Pressure (mmHg)</label>
+            <div class="slider-row">
+                <input type="range" id="sim-bp" min="90" max="200" step="1">
+                <span id="sim-bp-value">-</span>
+            </div>
+        </div>
+
+        <div class="slider-group">
+            <label for="sim-chol">Cholesterol (mg/dL)</label>
+            <div class="slider-row">
+                <input type="range" id="sim-chol" min="120" max="360" step="1">
+                <span id="sim-chol-value">-</span>
+            </div>
+        </div>
+
+        <div class="slider-group">
+            <label for="sim-smoking">Smoking Exposure</label>
+            <div class="slider-row">
+                <input type="range" id="sim-smoking" min="0" max="2" step="1">
+                <span id="sim-smoking-value">-</span>
+            </div>
+            <p class="slider-caption">0 = Never, 1 = Former, 2 = Current</p>
+        </div>
+
+        <div class="slider-group">
+            <div class="sim-toggle-head">
+                <span class="sim-toggle-title">Diabetes Risk Modifier</span>
+                <span id="sim-diabetes-value" class="sim-toggle-value">No</span>
+            </div>
+            <button id="sim-diabetes-toggle" class="sim-toggle-btn" type="button" aria-pressed="false">
+                <span class="sim-toggle-track" aria-hidden="true">
+                    <span class="sim-toggle-knob"></span>
+                </span>
+                <span id="sim-diabetes-text" class="sim-toggle-text">Modifier Off</span>
+            </button>
+            <input type="checkbox" id="sim-diabetes" class="sim-toggle-native" aria-label="Diabetes risk modifier">
+            <p class="slider-caption">Off = No diabetes impact, On = Apply diabetes impact</p>
+        </div>
+
+        <div class="wizard-actions">
+            <button id="sim-reset" type="button" class="ghost-btn">Reset Simulation</button>
+        </div>
+    </article>
+
+    <article class="card glass recommendations-card">
+        <div class="panel-head">
+            <h2>Preventive Recommendations</h2>
+            <p>Tailored guidance based on your current profile.</p>
+        </div>
+        <ul id="recommendation-list"></ul>
+    </article>
+
+    <div class="report-cta-wrap" role="region" aria-label="Medical summary download">
+        <button id="download-report" type="button" class="report-download-btn">Download Medical Summary</button>
+    </div>
+</section>
+{% endblock %}
+
+{% block page_data %}
+<script id="latest-assessment-data" type="application/json">{{ latest_assessment|tojson if latest_assessment else 'null' }}</script>
+{% if selected_record %}
+<script id="results-metadata" type="application/json">{{ {'source': 'historic'}|tojson }}</script>
+{% else %}
+<script id="results-metadata" type="application/json">{{ {'source': 'session'}|tojson }}</script>
+{% endif %}
+{% endblock %}

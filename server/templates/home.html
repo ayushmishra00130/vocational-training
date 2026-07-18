@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Preventive Cardiac Intelligence{% endblock %}
+{% block page_id %}home{% endblock %}
+
+{% block content %}
+<section class="hero hero-split">
+    <div class="hero-grid">
+        <div class="hero-left">
+            <h1>Next-Gen Cardiovascular Risk Assessment.</h1>
+            <p class="hero-copy">
+                Quantify heart-health risks using calibrated machine learning. Identify clinical drivers and simulate lifestyle interventions in real-time.
+            </p>
+            <div class="hero-actions hero-actions-left">
+                <a class="cta-btn hero-cta-glow" href="{{ url_for('assess') }}">Start Assessment</a>
+            </div>
+        </div>
+
+        <div class="hero-right" aria-hidden="true">
+            <div class="hero-preview-card glass">
+                <div class="hero-preview-head">
+                    <span>Command Center Preview</span>
+                    <span class="hero-preview-dot"></span>
+                </div>
+                <div class="hero-preview-gauge">
+                    <div class="hero-preview-ring">
+                        <strong>72%</strong>
+                        <span>Risk</span>
+                    </div>
+                    <p>Estimated screening probability</p>
+                </div>
+                <div class="hero-preview-bars">
+                    <div class="hero-preview-row">
+                        <span>Blood Pressure</span>
+                        <div class="hero-preview-track"><i style="width: 78%;"></i></div>
+                    </div>
+                    <div class="hero-preview-row">
+                        <span>Age</span>
+                        <div class="hero-preview-track"><i style="width: 63%;"></i></div>
+                    </div>
+                    <div class="hero-preview-row">
+                        <span>Smoking</span>
+                        <div class="hero-preview-track"><i style="width: 48%;"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="trust-bar" aria-label="Clinical trust indicators">
+        <p>Validated on 900+ Clinical Samples</p>
+        <p>85% Model Precision</p>
+        <p>Evidence-Based Triage</p>
+    </div>
+</section>
+
+{% endblock %}

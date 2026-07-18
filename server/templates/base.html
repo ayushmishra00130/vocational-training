@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head_extras %}{% endblock %}
+</head>
+<body data-page="{% block page_id %}home{% endblock %}">
+<header class="topbar">
+    <div class="topbar-inner">
+        <nav class="nav-links" aria-label="Primary navigation">
+            <a href="{{ url_for('home') }}" class="{% if request.path == url_for('home') %}is-active{% endif %}">Home</a>
+            <a href="{{ url_for('assess') }}" class="{% if request.path == url_for('assess') %}is-active{% endif %}">Assessment</a>
+            <a href="{{ url_for('results') }}" class="{% if request.path == url_for('results') %}is-active{% endif %}">Result</a>
+        </nav>
+    </div>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <section class="flash-stack" aria-live="polite">
+            {% for category, message in messages %}
+                <p class="flash-message flash-{{ category }}">{{ message }}</p>
+            {% endfor %}
+        </section>
+    {% endif %}
+{% endwith %}
+
+<main class="page-shell">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+    <p class="footer-alert">If you are having a medical emergency, contact emergency services immediately.</p>
+</footer>
+
+{% block page_data %}{% endblock %}
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
